@@ -1,27 +1,48 @@
-body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #ffcc00;
-        }
-        .char-box {
-            display: inline-block;
-            background: #1e1e1e;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 8px;
-            width: 250px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 5px 0;
-            border-bottom: 1px solid #333;
-        }
+  ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: #0b0f19;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+  }
+
+  .glass-panel {
+      background: rgba(18, 24, 38, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .neon-glow-gold {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+  }
+
+  .neon-glow-green {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  }
+
+  @keyframes pulseGlow {
+
+      0%,
+      100% {
+          opacity: 0.6;
+      }
+
+      50% {
+          opacity: 1;
+      }
+  }
+
+  .animate-pulse-slow {
+      animation: pulseGlow 3s infinite ease-in-out;
+  }
