@@ -1,41 +1,945 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>GTA V - Fan Oldal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA Online Hub: Járművek & Rablások</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gta: {
+                            dark: '#0b0f19',
+                            card: '#121826',
+                            border: '#1e293b',
+                            accent: '#f59e0b', // Amber/Gold cash vibe
+                            neon: '#10b981',   // Money green
+                            crimson: '#ef4444',// Alert red
+                            purple: '#8b5cf6'  // VIP purple
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Impact', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+        .glass-panel {
+            background: rgba(18, 24, 38, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .neon-glow-gold {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+        }
+        .neon-glow-green {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .animate-pulse-slow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gta-dark text-slate-100 font-sans min-h-screen selection:bg-amber-500 selection:text-black">
 
-    <h1>Grand Theft Auto V</h1>
-    <p>Üdvözlasd a Los Santos-i rajongói oldalon!</p>
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-black text-2xl text-black shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-gem text-black"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-wider bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                        LOS SANTOS HUB
+                    </h1>
+                    <p class="text-xs text-slate-400 tracking-widest uppercase font-semibold">Járművek & Rablások Terminal</p>
+                </div>
+            </div>
 
-    <hr style="border: 0; height: 1px; background: #333; margin: 20px 0;">
+            <!-- Navigation Tabs & Language / Garage Drawer Trigger -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <nav class="hidden md:flex space-x-1 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800">
+                    <button onclick="switchTab('vehicles')" id="nav-vehicles" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-amber-500 text-black shadow-md">
+                        <i class="fa-solid fa-car-side"></i>
+                        <span>Járművek / Vehicles</span>
+                    </button>
+                    <button onclick="switchTab('heists')" id="nav-heists" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                        <i class="fa-solid fa-vault"></i>
+                        <span>Rablások / Heists</span>
+                    </button>
+                    <button onclick="switchTab('garage')" id="nav-garage" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-white hover:bg-slate-800/50 relative">
+                        <i class="fa-solid fa-warehouse"></i>
+                        <span>Dream Garage</span>
+                        <span id="garage-badge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+                </nav>
 
-    <h2>Főszereplők</h2>
-    
-    <div class="char-box">
-        <h3>Michael De Santa</h3>
-        <p>A volt bankrabló, aki épp a gazdagok unalmas életét éli.</p>
+                <!-- Mobile Menu / Garage Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-800 text-amber-400 hover:bg-slate-700">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('vehicles'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-semibold flex items-center space-x-3 bg-amber-500 text-black">
+                <i class="fa-solid fa-car-side"></i>
+                <span>Járművek / Vehicles</span>
+            </button>
+            <button onclick="switchTab('heists'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-semibold flex items-center space-x-3 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-vault"></i>
+                <span>Rablások / Heists</span>
+            </button>
+            <button onclick="switchTab('garage'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl font-semibold flex items-center space-x-3 text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-warehouse"></i>
+                <span>Dream Garage</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= VEHICLES SECTION ================= -->
+        <section id="view-vehicles" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden glass-panel p-6 sm:p-10 border border-slate-800 bg-gradient-to-r from-amber-500/10 via-transparent to-purple-500/10">
+                <div class="max-w-2xl">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        Los Santos Customs & Showroom
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-black mt-3 tracking-tight">Járművek & Showroom</h2>
+                    <p class="text-slate-400 mt-2 text-sm sm:text-base">
+                        Fedezd fel Los Santos leggyorsabb szuperautóit, harci gépeit és utcai ragadozóit. Szűrj kategóriák szerint, vizsgáld meg a teljesítményt, és állítsd össze álomgarázsodat!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Filters & Search Bar -->
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <!-- Categories -->
+                <div id="vehicle-categories" class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="filterVehicles('all')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-amber-500 text-black shadow-md" data-category="all">
+                        Összes / All
+                    </button>
+                    <button onclick="filterVehicles('Super')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="Super">
+                        Szuperautók (Super)
+                    </button>
+                    <button onclick="filterVehicles('Sports')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="Sports">
+                        Sport (Sports)
+                    </button>
+                    <button onclick="filterVehicles('Muscle')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="Muscle">
+                        Izomautók (Muscle)
+                    </button>
+                    <button onclick="filterVehicles('SUV')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="SUV">
+                        SUV & Off-Road
+                    </button>
+                    <button onclick="filterVehicles('Motorcycle')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="Motorcycle">
+                        Motorok (Bikes)
+                    </button>
+                    <button onclick="filterVehicles('Aircraft')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700" data-category="Aircraft">
+                        Repülők (Aircraft)
+                    </button>
+                </div>
+
+                <!-- Search & Sort -->
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="vehicle-search" oninput="searchVehicles()" placeholder="Keresés név alapján..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-amber-500 text-slate-200">
+                    </div>
+                    <select id="vehicle-sort" onchange="sortVehicles()" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-500 text-slate-200">
+                        <option value="price-desc">Legdrágább / Highest Price</option>
+                        <option value="price-asc">Legolcsóbb / Lowest Price</option>
+                        <option value="speed">Leggyorsabb / Top Speed</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Vehicle Grid -->
+            <div id="vehicle-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- ================= HEISTS SECTION ================= -->
+        <section id="view-heists" class="space-y-8 hidden">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden glass-panel p-6 sm:p-10 border border-slate-800 bg-gradient-to-r from-red-500/10 via-transparent to-amber-500/10">
+                <div class="max-w-2xl">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-red-500/20 text-red-400 border border-red-500/30">
+                        Plan & Execute High-Stakes Jobs
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-black mt-3 tracking-tight">Rablások & Útmutatók</h2>
+                    <p class="text-slate-400 mt-2 text-sm sm:text-base">
+                        Számold ki a maximális profitot a Cayo Perico, Diamond Casino és más nagy rablások esetén. Használd a részletes prep guide-okat a tökéletes kivitelezéshez!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Heist Hub Tabs (Calculator vs Guides) -->
+            <div class="flex space-x-2 border-b border-slate-800 pb-4">
+                <button onclick="switchHeistTab('calc')" id="heist-tab-calc" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-amber-500 text-black transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Payout Calculator / Nyereség Kalkulátor</span>
+                </button>
+                <button onclick="switchHeistTab('guides')" id="heist-tab-guides" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Prep Guides / Útmutatók</span>
+                </button>
+            </div>
+
+            <!-- 1. HEIST CALCULATOR VIEW -->
+            <div id="heist-calc-view" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Controls Column -->
+                <div class="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-800">
+                    <h3 class="text-xl font-bold flex items-center space-x-2 text-amber-400">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Rablás Beállítások / Heist Parameters</span>
+                    </h3>
+
+                    <!-- Select Heist -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-300">Válassz Rablást / Select Heist</label>
+                        <select id="calc-heist-type" onchange="updateHeistCalcOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-slate-200 font-medium">
+                            <option value="cayo">Cayo Perico Heist (Legjövedelmezőbb / Solo Friendly)</option>
+                            <option value="casino">Diamond Casino Heist (Multiplayer Vault Raid)</option>
+                            <option value="doomsday">Doomsday Heist - Act III (Bunkeres akció)</option>
+                            <option value="pacific">Pacific Standard (Klasszikus / Classic)</option>
+                        </select>
+                    </div>
+
+                    <!-- Dynamic Options based on heist -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-300">Nehézségi szint / Difficulty</label>
+                            <select id="calc-difficulty" onchange="calculateHeist()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-slate-200">
+                                <option value="hard">Hard (+10% Payout, 1 élet)</option>
+                                <option value="normal">Normal (Könnyebb / Easy)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-slate-300">Játékosok száma / Players</label>
+                            <select id="calc-players" onchange="calculateHeist()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-slate-200">
+                                <option value="1">1 Játékos (Solo - Cayo only)</option>
+                                <option value="2">2 Játékos</option>
+                                <option value="3">3 Játékos</option>
+                                <option value="4">4 Játékos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Primary Target selector -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-300">Elsődleges Célpont / Primary Target</label>
+                        <select id="calc-primary" onchange="calculateHeist()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 text-slate-200">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- Secondary Loot Slider / Value -->
+                    <div class="space-y-3 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-300">Másodlagos zsákmány (Táska érték) / Secondary Loot</label>
+                            <span id="calc-secondary-val" class="text-amber-400 font-bold">$400,000</span>
+                        </div>
+                        <input type="range" id="calc-secondary-slider" min="0" max="500000" step="25000" value="400000" oninput="calculateHeist()" class="w-full accent-amber-500 cursor-pointer">
+                        <div class="flex justify-between text-xs text-slate-500">
+                            <span>$0 (Csak főcél)</span>
+                            <span>Max Táska ($500k)</span>
+                        </div>
+                    </div>
+
+                    <!-- Toggles: Elite Challenge & Setup Cost -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" id="calc-elite" onchange="calculateHeist()" class="w-5 h-5 accent-amber-500 rounded">
+                            <div>
+                                <span class="text-sm font-bold block text-slate-200">Elite Challenge</span>
+                                <span class="text-xs text-slate-400">+ Bónusz jutalom</span>
+                            </div>
+                        </label>
+                        <div class="space-y-1 p-3 rounded-xl bg-slate-900 border border-slate-800">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Indítási költség / Setup Fee</label>
+                            <span id="calc-setup-fee" class="text-red-400 font-bold text-sm">$25,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Summary Column -->
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-slate-800 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 text-9xl text-slate-800/20 font-black pointer-events-none">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                    <div class="space-y-6 relative z-10">
+                        <h3 class="text-xl font-bold flex items-center space-x-2 text-emerald-400">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Pénzügyi Összegzés</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Bruttó Rablási Érték / Gross Take</span>
+                                <span id="res-gross" class="text-2xl sm:text-3xl font-black text-slate-100 mt-1 block">$1,400,000</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Ferdinande / Munkatárs Cut (Átlag)</span>
+                                <span id="res-crew-cut" class="text-lg font-bold text-red-400 mt-1 block">-$150,000</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Előzmény Költségek / Setup Fee</span>
+                                <span id="res-fee" class="text-lg font-bold text-red-400 mt-1 block">-$25,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Payout Box -->
+                    <div class="mt-8 pt-6 border-t border-slate-800 relative z-10">
+                        <div class="bg-gradient-to-br from-emerald-500/20 to-emerald-900/30 border border-emerald-500/40 p-5 rounded-2xl">
+                            <span class="text-xs text-emerald-400 font-bold uppercase tracking-widest block">Tiszta Profit Te Részedre / Net Payout</span>
+                            <span id="res-net" class="text-3xl sm:text-4xl font-black text-emerald-400 mt-1 block">$1,225,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PREP GUIDES VIEW -->
+            <div id="heist-guides-view" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cayo Guide -->
+                    <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xl">
+                                <i class="fa-solid fa-skull-crossbones"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold">Cayo Perico Heist Guide</h4>
+                                <p class="text-xs text-slate-400">A leggyorsabb pénzforrás solo játékosoknak is</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-amber-400 mt-1"></i>
+                                <span><strong>Megközelítés (Approach):</strong> Kosatka tengeralattjáró + Longfin vagy Sub Approach.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-amber-400 mt-1"></i>
+                                <span><strong>Bejutás:</strong> Drainage Tunnel (Víz alatti vágópisztolyos bejárat a compound alá).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-amber-400 mt-1"></i>
+                                <span><strong>Fegyverzet:</strong> Conspirator loadout (Supppressors kötelező!).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-amber-400 mt-1"></i>
+                                <span><strong>Menekülés:</strong> Ússz ki a sziget déli csücskénél a tengerbe, vagy lopj motort.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Casino Guide -->
+                    <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xl">
+                                <i class="fa-solid fa-dice"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold">Diamond Casino Heist Guide</h4>
+                                <p class="text-xs text-slate-400">Taktikai csapatmunka és lakatfeltörés</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-purple-400 mt-1"></i>
+                                <span><strong>Megközelítés:</strong> Big Con (Aggressive-t kerüld, ha max looter akarsz lenni).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-purple-400 mt-1"></i>
+                                <span><strong>Álcázás:</strong> Gruppe Sechs ruházat (A legtisztább bejutás a mélygarázsból).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-purple-400 mt-1"></i>
+                                <span><strong>Hackelés:</strong> Gyakorold a ujjlenyomat-szkenner (Fingerprint) rejtvényeket.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fa-solid fa-check text-purple-400 mt-1"></i>
+                                <span><strong>Menekülés:</strong> Csatornaalagút (Sewers) a rendőrök lerázásához.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= DREAM GARAGE VIEW ================= -->
+        <section id="view-garage" class="space-y-8 hidden">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden glass-panel p-6 sm:p-10 border border-slate-800 bg-gradient-to-r from-purple-500/10 via-transparent to-amber-500/10">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                            Custom Loadout & Showroom
+                        </span>
+                        <h2 class="text-3xl sm:text-5xl font-black mt-3 tracking-tight">Dream Garage / Álomgarázs</h2>
+                        <p class="text-slate-400 mt-2 text-sm sm:text-base">
+                            Válogasd össze kedvenc járműveidet a listából, számold ki a teljes garázs értékét, és tervezd meg a következő nagy vásárlásodat!
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl min-w-[260px]">
+                        <span class="text-xs text-slate-400 uppercase font-bold tracking-wider block">Garázs Összérték / Total Value</span>
+                        <span id="garage-total-price" class="text-3xl font-black text-amber-400 mt-1 block">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Garage Vehicles Container -->
+            <div id="garage-vehicle-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <div id="vehicle-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div id="modal-content" class="glass-panel max-w-2xl w-full rounded-3xl p-6 sm:p-8 border border-slate-700 relative transform transition-all scale-95 opacity-0">
+            <!-- Close Button -->
+            <button onclick="closeVehicleModal()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div id="modal-body" class="space-y-6">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
     </div>
 
-    <div class="char-box">
-        <h3>Franklin Clinton</h3>
-        <p>A fiatal utcai gengszter, aki nagyratörő álmokat dédelget.</p>
-    </div>
+    <script>
+        // --- GTA ONLINE DATASET ---
+        const vehiclesData = [
+            {
+                id: 1,
+                name: "Grotti Vigilante",
+                category: "Super",
+                price: 3750000,
+                topSpeed: "147 mph (Boost)",
+                armor: "Gyenge (1 RPG)",
+                weapons: "Géppuska + Rakéta",
+                badge: "Batmobile Vibe",
+                desc: "Rakétameghajtású szörnyeteg, amely pillanatok alatt eléri a csúcssebességet. Tökéletes küldetésekhez és heist setupokhoz.",
+                upgradeCost: 150000,
+                image: "https://placehold.co/600x350/121826/f59e0b?text=Grotti+Vigilante"
+            },
+            {
+                id: 2,
+                name: "Pegassi Oppressor Mk II",
+                category: "Super",
+                price: 3890000,
+                topSpeed: "130 mph (Havering)",
+                armor: "Közepes",
+                weapons: "Homing Rakéták",
+                badge: "Legnépszerűbb",
+                desc: "A repülő motor, amivel Los Santos egésze uralható. Gyors közlekedéshez és prepekhez kötelező darab.",
+                upgradeCost: 200000,
+                image: "https://placehold.co/600x350/121826/10b981?text=Oppressor+Mk+II"
+            },
+            {
+                id: 3,
+                name: "Benefactor Krieger",
+                category: "Super",
+                price: 2875000,
+                topSpeed: "127.25 mph",
+                armor: "Széria",
+                weapons: "Nincs",
+                badge: "Pálya Király",
+                desc: "Hihetetlen tapadás és kanyarsebesség jellemzi ezt a német precizitással megépített szuperautót.",
+                upgradeCost: 250000,
+                image: "https://placehold.co/600x350/121826/3b82f6?text=Benefactor+Krieger"
+            },
+            {
+                id: 4,
+                name: "Progen Emerus",
+                category: "Super",
+                price: 2750000,
+                topSpeed: "127.5 mph",
+                armor: "Széria",
+                weapons: "Nincs",
+                badge: "Pálya Király",
+                desc: "Kiemelkedő gyorsulás és aerodinamika. Az egyik leggyorsabb köridőre képes gép a városban.",
+                upgradeCost: 240000,
+                image: "https://placehold.co/600x350/121826/8b5cf6?text=Progen+Emerus"
+            },
+            {
+                id: 5,
+                name: "Declasse Vigero ZX",
+                category: "Muscle",
+                price: 1940000,
+                topSpeed: "125 mph (Hao's)",
+                armor: "Széria",
+                weapons: "Nincs",
+                badge: "HSW Tuning",
+                desc: "Klasszikus amerikai izomautó modern vadállat külsővel. HSW tuninggal brutális sebességre képes.",
+                upgradeCost: 350000,
+                image: "https://placehold.co/600x350/121826/ef4444?text=Vigero+ZX"
+            },
+            {
+                id: 6,
+                name: "Bravado Buffalo STX",
+                category: "Muscle",
+                price: 2150000,
+                topSpeed: "126.5 mph",
+                armor: "Aknamentes / Imani Tech",
+                weapons: "Géppuska",
+                badge: "Imani Tech",
+                desc: "Páncélozható szedán Imani Tech fejlesztésekkel és rakétazavaróval. Kiváló védelmet nyújt a grieferek ellen.",
+                upgradeCost: 400000,
+                image: "https://placehold.co/600x350/121826/f97316?text=Buffalo+STX"
+            },
+            {
+                id: 7,
+                name: "Pegassi Toreador",
+                category: "Sports",
+                price: 3660000,
+                topSpeed: "135 mph",
+                armor: "Erős (6 RPG bír)",
+                weapons: "Végtelen Rakéta + Torpedó",
+                badge: "Víz alatti is",
+                desc: "Kétéltű szuperautó boosttal és rakétákkal. A Cayo Perico heist prepek elengedhetetlen segítője.",
+                upgradeCost: 180000,
+                image: "https://placehold.co/600x350/121826/06b6d4?text=Pegassi+Toreador"
+            },
+            {
+                id: 8,
+                name: "Annis ZR350",
+                category: "Sports",
+                price: 1615000,
+                topSpeed: "117.5 mph",
+                armor: "Széria",
+                weapons: "Nincs",
+                badge: "Drift Monster",
+                desc: "Klasszikus JDM legendás drift autó az Arena War vérvonalból.",
+                upgradeCost: 220000,
+                image: "https://placehold.co/600x350/121826/ec4899?text=Annis+ZR350"
+            },
+            {
+                id: 9,
+                name: "Buckingham Pyro",
+                category: "Aircraft",
+                price: 4455500,
+                topSpeed: "222.75 mph",
+                armor: "Közepes",
+                weapons: "Rakéták & Gépágyú",
+                badge: "Leggyorsabb Gép",
+                desc: "A légtér királya. Kiváló fordulékony sugárhajtású vadászgép.",
+                upgradeCost: 100000,
+                image: "https://placehold.co/600x350/121826/64748b?text=Buckingham+Pyro"
+            }
+        ];
 
-    <div class="char-box">
-        <h3>Trevor Philips</h3>
-        <p>A kiszámíthatatlan pszichopata és drogdíler.</p>
-    </div>
+        const heistData = {
+            cayo: {
+                name: "Cayo Perico Heist",
+                setupFee: 25000,
+                primaries: [
+                    { name: "Párducszobor (Panther Statue)", value: 1900000 },
+                    { name: "Rózsaszín Gyémánt (Pink Diamond)", value: 1300000 },
+                    { name: "Alvó Aktatáska / Medál (Bonds)", value: 1100000 },
+                    { name: "Aranyrögök / Tequila", value: 900000 }
+                ]
+            },
+            casino: {
+                name: "Diamond Casino Heist",
+                setupFee: 25000,
+                primaries: [
+                    { name: "Gyémántok (Diamonds)", value: 3290000 },
+                    { name: "Arany (Gold)", value: 2584000 },
+                    { name: "Műalkotások (Artwork)", value: 2350000 },
+                    { name: "Készpénz (Cash)", value: 2115000 }
+                ]
+            },
+            doomsday: {
+                name: "Doomsday Heist - Act III",
+                setupFee: 65000,
+                primaries: [
+                    { name: "Clifford Adatok (Bases Raid)", value: 1200000 }
+                ]
+            },
+            pacific: {
+                name: "Pacific Standard Job",
+                setupFee: 100000,
+                primaries: [
+                    { name: "Bank Kötvények & Készpénz", value: 1250000 }
+                ]
+            }
+        };
 
-    <h2>Népszerű Csalások (PS / Xbox)</h2>
-    <ul style="max-width: 300px; margin: 0 auto;">
-        <li><strong>Fegyverek:</strong> Háromszög, R2, Bal, L1, X, Jobb, Háromszög, Le, Négyzet, L1, L1, L1</li>
-        <li><strong>Sebezhetetlenség:</strong> Jobb, X, Jobb, Bal, Jobb, R1, Jobb, Bal, X, Háromszög</li>
-        <li><strong>Keresztmetszet / Lassítás:</strong> Négyzet, L2, R1, Háromszög, Bal, Négyzet, L2, Jobb, X</li>
-    </ul>
+        // --- STATE VARIABLES ---
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let currentSort = 'price-desc';
+        let garage = []; // Array of vehicle IDs
 
+        // --- INIT ON LOAD ---
+        window.onload = function() {
+            renderVehicles();
+            updateHeistCalcOptions();
+            updateGarageBadge();
+        };
+
+        // --- TAB NAVIGATION ---
+        function switchTab(tabId) {
+            document.getElementById('view-vehicles').classList.add('hidden');
+            document.getElementById('view-heists').classList.add('hidden');
+            document.getElementById('view-garage').classList.add('hidden');
+
+            document.getElementById('nav-vehicles').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-white hover:bg-slate-800/50";
+            document.getElementById('nav-heists').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-white hover:bg-slate-800/50";
+            document.getElementById('nav-garage').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-white hover:bg-slate-800/50 relative";
+
+            if(tabId === 'vehicles') {
+                document.getElementById('view-vehicles').classList.remove('hidden');
+                document.getElementById('nav-vehicles').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-amber-500 text-black shadow-md";
+            } else if(tabId === 'heists') {
+                document.getElementById('view-heists').classList.remove('hidden');
+                document.getElementById('nav-heists').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-amber-500 text-black shadow-md";
+            } else if(tabId === 'garage') {
+                document.getElementById('view-garage').classList.remove('hidden');
+                document.getElementById('nav-garage').className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center space-x-2 bg-amber-500 text-black shadow-md relative";
+                renderGarage();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- VEHICLE FUNCTIONS ---
+        function filterVehicles(cat) {
+            currentCategory = cat;
+            // Update button styles
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.getAttribute('data-category') === cat) {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-amber-500 text-black shadow-md";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700";
+                }
+            });
+            renderVehicles();
+        }
+
+        function searchVehicles() {
+            searchQuery = document.getElementById('vehicle-search').value.toLowerCase();
+            renderVehicles();
+        }
+
+        function sortVehicles() {
+            currentSort = document.getElementById('vehicle-sort').value;
+            renderVehicles();
+        }
+
+        function renderVehicles() {
+            const grid = document.getElementById('vehicle-grid');
+            let filtered = vehiclesData.filter(v => {
+                const matchCat = currentCategory === 'all' || v.category === currentCategory;
+                const matchSearch = v.name.toLowerCase().includes(searchQuery) || v.desc.toLowerCase().includes(searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if(currentSort === 'price-desc') return b.price - a.price;
+                if(currentSort === 'price-asc') return a.price - b.price;
+                if(currentSort === 'speed') return b.topSpeed.localeCompare(a.topSpeed);
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-500">Nincs találat a megadott feltételekkel.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(v => {
+                const inGarage = garage.includes(v.id);
+                return `
+                    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all duration-300 group">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="${v.image}" alt="${v.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x350/121826/f59e0b?text=GTA+Vehicle'">
+                            <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-amber-500/30">
+                                ${v.badge}
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-lg font-bold text-slate-100">${v.name}</h4>
+                                    <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400">${v.category}</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-2 line-clamp-2">${v.desc}</p>
+                            </div>
+                            <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] text-slate-500 uppercase tracking-widest block font-bold">Ár / Price</span>
+                                    <span class="text-lg font-black text-amber-400">$${v.price.toLocaleString()}</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="openVehicleModal(${v.id})" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-semibold transition-all">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </button>
+                                    <button onclick="toggleGarage(${v.id})" class="px-3.5 py-2 rounded-xl ${inGarage ? 'bg-emerald-500 text-black' : 'bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-black'} text-xs font-bold transition-all flex items-center space-x-1.5">
+                                        <i class="fa-solid ${inGarage ? 'fa-check' : 'fa-plus'}"></i>
+                                        <span>${inGarage ? 'Garare' : 'Garage'}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- VEHICLE MODAL ---
+        function openVehicleModal(id) {
+            const v = vehiclesData.find(item => item.id === id);
+            if(!v) return;
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-amber-500/20 text-amber-400 border border-amber-500/30">${v.badge}</span>
+                            <h3 class="text-2xl font-black mt-2">${v.name}</h3>
+                        </div>
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300">${v.category}</span>
+                    </div>
+                    <img src="${v.image}" alt="${v.name}" class="w-full h-56 object-cover rounded-2xl border border-slate-800">
+                    <p class="text-sm text-slate-300">${v.desc}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase font-bold block">Csúcssebesség / Top Speed</span>
+                            <span class="text-base font-bold text-amber-400 mt-1 block">${v.topSpeed}</span>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase font-bold block">Páncélzat / Armor</span>
+                            <span class="text-base font-bold text-slate-200 mt-1 block">${v.armor}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase font-bold block">Fegyverzet / Weapons</span>
+                            <span class="text-base font-bold text-red-400 mt-1 block">${v.weapons}</span>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase font-bold block">Becsült Tuning Költség</span>
+                            <span class="text-base font-bold text-emerald-400 mt-1 block">$${v.upgradeCost.toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-between items-center border-t border-slate-800">
+                        <div>
+                            <span class="text-xs text-slate-500 uppercase font-bold block">Alapár / Base Price</span>
+                            <span class="text-2xl font-black text-amber-400">$${v.price.toLocaleString()}</span>
+                        </div>
+                        <button onclick="toggleGarage(${v.id}); closeVehicleModal();" class="px-6 py-3 rounded-xl bg-amber-500 text-black font-bold text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition-all">
+                            ${garage.includes(v.id) ? 'Eltávolítás a Garázsból' : 'Hozzáadás a Garázshoz'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('vehicle-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeVehicleModal() {
+            const modal = document.getElementById('vehicle-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // --- GARAGE FUNCTIONS ---
+        function toggleGarage(id) {
+            const index = garage.indexOf(id);
+            if(index > -1) {
+                garage.splice(index, 1);
+            } else {
+                garage.push(id);
+            }
+            updateGarageBadge();
+            renderVehicles();
+            if(!document.getElementById('view-garage').classList.contains('hidden')) {
+                renderGarage();
+            }
+        }
+
+        function updateGarageBadge() {
+            const badge = document.getElementById('garage-badge');
+            if(garage.length > 0) {
+                badge.textContent = garage.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderGarage() {
+            const listContainer = document.getElementById('garage-vehicle-list');
+            const totalPriceEl = document.getElementById('garage-total-price');
+
+            if(garage.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="col-span-full py-20 text-center space-y-3">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-500 text-2xl">
+                            <i class="fa-solid fa-car"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-300">A garázsod üres</h4>
+                        <p class="text-sm text-slate-500">Válassz járműveket a Járművek fülön, és add hozzá őket az álomgarázshoz!</p>
+                    </div>
+                `;
+                totalPriceEl.textContent = "$0";
+                return;
+            }
+
+            let totalValue = 0;
+            const garageVehicles = vehiclesData.filter(v => garage.includes(v.id));
+
+            listContainer.innerHTML = garageVehicles.map(v => {
+                totalValue += v.price + v.upgradeCost;
+                return `
+                    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800 flex flex-col justify-between">
+                        <div class="relative h-40 overflow-hidden bg-slate-900">
+                            <img src="${v.image}" alt="${v.name}" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 px-3 py-1 rounded-full text-xs font-bold text-amber-400">
+                                ${v.category}
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <h4 class="text-lg font-bold">${v.name}</h4>
+                            <div class="flex justify-between items-center text-xs text-slate-400">
+                                <span>Alapár: $${v.price.toLocaleString()}</span>
+                                <span class="text-emerald-400">Tuning: +$${v.upgradeCost.toLocaleString()}</span>
+                            </div>
+                            <button onclick="toggleGarage(${v.id})" class="w-full py-2.5 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white font-bold text-xs transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-trash"></i>
+                               <span>Eltávolítás</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalPriceEl.textContent = `$${totalValue.toLocaleString()}`;
+        }
+
+        // --- HEIST FUNCTIONS ---
+        function switchHeistTab(tab) {
+            const calcView = document.getElementById('heist-calc-view');
+            const guidesView = document.getElementById('heist-guides-view');
+            const btnCalc = document.getElementById('heist-tab-calc');
+            const btnGuides = document.getElementById('heist-tab-guides');
+
+            if(tab === 'calc') {
+                calcView.classList.remove('hidden');
+                guidesView.classList.add('hidden');
+                btnCalc.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-amber-500 text-black transition-all flex items-center space-x-2";
+                btnGuides.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center space-x-2";
+            } else {
+                calcView.classList.add('hidden');
+                guidesView.classList.remove('hidden');
+                btnCalc.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center space-x-2";
+                btnGuides.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-amber-500 text-black transition-all flex items-center space-x-2";
+            }
+        }
+
+        function updateHeistCalcOptions() {
+            const typeKey = document.getElementById('calc-heist-type').value;
+            const heist = heistData[typeKey];
+            const primarySelect = document.getElementById('calc-primary');
+            const setupFeeEl = document.getElementById('calc-setup-fee');
+
+            setupFeeEl.textContent = `$${heist.setupFee.toLocaleString()}`;
+
+            primarySelect.innerHTML = heist.primaries.map((p, idx) => `
+                <option value="${p.value}">${p.name} ($${p.value.toLocaleString()})</option>
+            `).join('');
+
+            calculateHeist();
+        }
+
+        function calculateHeist() {
+            const primaryVal = parseInt(document.getElementById('calc-primary').value) || 0;
+            const secondaryVal = parseInt(document.getElementById('calc-secondary-slider').value) || 0;
+            document.getElementById('calc-secondary-val').textContent = `$${secondaryVal.toLocaleString()}`;
+
+            const difficulty = document.getElementById('calc-difficulty').value;
+            const isElite = document.getElementById('calc-elite').checked;
+            const typeKey = document.getElementById('calc-heist-type').value;
+            const setupFee = heistData[typeKey].setupFee;
+
+            let gross = primaryVal + secondaryVal;
+            if(difficulty === 'hard') {
+                gross *= 1.1; // 10% bonus for hard
+            }
+
+            if(isElite) {
+                gross += (typeKey === 'cayo' ? 100000 : 50000);
+            }
+
+            // Crew cut estimation (approx 15% for support crew if applicable, or 0 for solo Cayo)
+            const players = parseInt(document.getElementById('calc-players').value);
+            let crewCut = 0;
+            if(typeKey === 'casino') {
+                crewCut = gross * 0.15;
+            } else if(typeKey === 'pacific') {
+                crewCut = gross * 0.20;
+            }
+
+            const net = gross - crewCut - setupFee;
+
+            document.getElementById('res-gross').textContent = `$${Math.round(gross).toLocaleString()}`;
+            document.getElementById('res-crew-cut').textContent = `-$${Math.round(crewCut).toLocaleString()}`;
+            document.getElementById('res-fee').textContent = `-$${setupFee.toLocaleString()}`;
+            document.getElementById('res-net').textContent = `$${Math.round(net).toLocaleString()}`;
+        }
+    </script>
 </body>
 </html>
