@@ -1,0 +1,82 @@
+ body {
+            margin: 0;
+            font-family: Arial;
+            background-color: #fff3d0;
+        }
+
+        header {
+            background-color: #d71900;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #ffcc00;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            color: #d71900;
+            text-decoration: none;
+            margin: 15px;
+            font-weight: bold;
+        }
+
+        .bemutato {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #d71900;
+            color: white;
+        }
+
+        .bemutato h1 {
+            font-size: 45px;
+        }
+
+        .gomb {
+            background-color: #ffcc00;
+            color: #d71900;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .menu {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .termek {
+            display: inline-block;
+            width: 250px;
+            background-color: white;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px gray;
+        }
+
+        .termek img {
+            width: 180px;
+            height: 120px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .termek button {
+            background-color: #d71900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
