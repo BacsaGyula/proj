@@ -4,106 +4,906 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Burger oldal</title>
+    <title>GRILLBOX — Rendelés</title>
 
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Ikonok -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap"
+        rel="stylesheet"
+    >
 </head>
 
 <body>
 
-    <header>
-        <h1>🍔 BURGER HOUSE</h1>
-    </header>
+<!-- ================= HEADER ================= -->
 
-    <nav>
-        <a href="#fooldal">Főoldal</a>
-        <a href="#menu">Menü</a>
-        <a href="#kapcsolat">Kapcsolat</a>
-    </nav>
+<header class="header">
 
-    <div class="bemutato" id="fooldal">
-        <h1>Finom hamburgerek!</h1>
+    <div class="header-inner">
+
+        <a href="#home" class="logo">
+            <span class="logo-mark">G</span>
+            <span>GRILL<span>BOX</span></span>
+        </a>
+
+        <nav class="desktop-nav">
+            <a href="#home">Kezdőlap</a>
+            <a href="#menu">Étlap</a>
+            <a href="#offers">Ajánlatok</a>
+            <a href="#coupons">Kuponok</a>
+        </nav>
+
+        <div class="header-actions">
+
+            <a href="#profile" class="icon-button">
+                <i class="fa-regular fa-user"></i>
+            </a>
+
+            <a href="#cart" class="cart-button">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Kosár</span>
+                <b>2</b>
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<main id="home">
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="eyebrow">FRISSEN A GRILLRŐL</span>
+
+        <h1>
+            A jó burger
+            <span>itt kezdődik.</span>
+        </h1>
 
         <p>
-            Friss hamburger, ropogós sült krumpli és hideg üdítő.
+            Válogass kedvenceink közül, állítsd össze a saját menüdet,
+            és rendeld meg néhány kattintással.
         </p>
 
-        <button class="gomb" onclick="ugras()">
-            Menü megtekintése
-        </button>
-    </div>
+        <div class="hero-buttons">
+            <a href="#menu" class="btn btn-primary">
+                Étlap megnyitása
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
 
-    <div class="menu" id="menu">
-
-        <h2>🍔 Menü</h2>
-
-        <div class="termek">
-            <h3>Classic Burger</h3>
-
-            <div style="font-size:80px;">🍔</div>
-
-            <p>Marhahús, sajt, saláta és paradicsom.</p>
-
-            <h3>2490 Ft</h3>
-
-            <button onclick="kosar('Classic Burger')">
-                Kosárba
-            </button>
+            <a href="#offers" class="btn btn-light">
+                Mai ajánlatok
+            </a>
         </div>
 
-        <div class="termek">
-            <h3>Cheese Burger</h3>
+        <div class="hero-info">
 
-            <div style="font-size:80px;">🍔</div>
+            <div>
+                <i class="fa-solid fa-clock"></i>
+                <span>20–30 perc</span>
+            </div>
 
-            <p>Marhahús, dupla sajt és finom szósz.</p>
+            <div>
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Budapest</span>
+            </div>
 
-            <h3>2790 Ft</h3>
+            <div>
+                <i class="fa-solid fa-star"></i>
+                <span>4.8 / 5</span>
+            </div>
 
-            <button onclick="kosar('Cheese Burger')">
-                Kosárba
-            </button>
-        </div>
-
-        <div class="termek">
-            <h3>Chicken Burger</h3>
-
-            <div style="font-size:80px;">🍗</div>
-
-            <p>Ropogós csirke, saláta és szósz.</p>
-
-            <h3>2690 Ft</h3>
-
-            <button onclick="kosar('Chicken Burger')">
-                Kosárba
-            </button>
         </div>
 
     </div>
 
-    <div class="menu" id="kapcsolat">
+    <div class="hero-food">
 
-        <h2>📞 Kapcsolat</h2>
+        <div class="discount-badge">
+            <strong>-20%</strong>
+            <span>MA</span>
+        </div>
 
-        <p>Email: burger@example.com</p>
-        <p>Telefon: +36 30 123 4567</p>
+        <div class="burger-illustration">
+
+            <div class="burger-bun-top"></div>
+
+            <div class="burger-cheese"></div>
+
+            <div class="burger-meat"></div>
+
+            <div class="burger-cheese cheese-two"></div>
+
+            <div class="burger-meat meat-two"></div>
+
+            <div class="burger-bun-bottom"></div>
+
+        </div>
 
     </div>
 
-    <footer>
-        <p>© 2026 Burger House</p>
-    </footer>
+</section>
 
-    <script>
 
-        function ugras() {
-            document.getElementById("menu").scrollIntoView();
-        }
+<!-- ================= CATEGORIES ================= -->
 
-        function kosar(termek) {
-            alert(termek + " bekerült a kosárba!");
-        }
+<section class="categories section">
 
-    </script>
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">MIT KÍVÁNSZ?</span>
+            <h2>Válassz kategóriát</h2>
+        </div>
+
+        <a href="#menu" class="see-all">
+            Teljes étlap
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="category-grid">
+
+        <a href="#burgers" class="category-card active">
+            <div class="category-icon burger-icon">
+                <i class="fa-solid fa-burger"></i>
+            </div>
+            <span>Burgerek</span>
+        </a>
+
+        <a href="#menus" class="category-card">
+            <div class="category-icon">
+                <i class="fa-solid fa-box"></i>
+            </div>
+            <span>Menük</span>
+        </a>
+
+        <a href="#sides" class="category-card">
+            <div class="category-icon">
+                <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <span>Köretek</span>
+        </a>
+
+        <a href="#drinks" class="category-card">
+            <div class="category-icon">
+                <i class="fa-solid fa-glass-water"></i>
+            </div>
+            <span>Italok</span>
+        </a>
+
+        <a href="#desserts" class="category-card">
+            <div class="category-icon">
+                <i class="fa-solid fa-ice-cream"></i>
+            </div>
+            <span>Desszertek</span>
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= OFFERS ================= -->
+
+<section class="offers section" id="offers">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">NE MARADJ LE</span>
+            <h2>Mai ajánlataink</h2>
+        </div>
+
+        <a href="#coupons" class="see-all">
+            Összes ajánlat
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="offer-grid">
+
+        <article class="offer-card offer-orange">
+
+            <div class="offer-copy">
+                <span>LIMITÁLT AJÁNLAT</span>
+
+                <h3>Double<br>Grill Menü</h3>
+
+                <p>
+                    Dupla hús, sajt, sült krumpli
+                    és egy frissítő.
+                </p>
+
+                <a href="#menu" class="offer-btn">
+                    Megnézem
+                </a>
+            </div>
+
+            <div class="offer-burger">
+                <div class="mini-bun"></div>
+                <div class="mini-meat"></div>
+                <div class="mini-cheese"></div>
+                <div class="mini-meat"></div>
+                <div class="mini-bottom"></div>
+            </div>
+
+        </article>
+
+
+        <article class="offer-card offer-dark">
+
+            <div class="offer-copy">
+                <span>ONLINE KUPON</span>
+
+                <h3>2 BURGER<br>EGY ÁRON</h3>
+
+                <p>
+                    Használd a GRILL2 kódot
+                    rendeléskor.
+                </p>
+
+                <a href="#coupons" class="offer-btn white">
+                    Kupon megnyitása
+                </a>
+            </div>
+
+            <div class="coupon-symbol">
+                <i class="fa-solid fa-ticket"></i>
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MENU ================= -->
+
+<section class="menu section" id="menu">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">ÉTLAP</span>
+            <h2>Legnépszerűbbek</h2>
+        </div>
+
+        <a href="#menu" class="see-all">
+            Teljes étlap
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="filter-tabs">
+
+        <a href="#burgers" class="filter active">Burgerek</a>
+        <a href="#menus" class="filter">Menük</a>
+        <a href="#sides" class="filter">Köretek</a>
+        <a href="#drinks" class="filter">Italok</a>
+        <a href="#desserts" class="filter">Desszertek</a>
+
+    </div>
+
+
+    <div class="product-grid" id="burgers">
+
+        <!-- PRODUCT -->
+
+        <article class="product-card">
+
+            <div class="product-image red">
+                <span class="popular">NÉPSZERŰ</span>
+
+                <div class="product-burger">
+                    <div class="pb-top"></div>
+                    <div class="pb-lettuce"></div>
+                    <div class="pb-cheese"></div>
+                    <div class="pb-meat"></div>
+                    <div class="pb-bottom"></div>
+                </div>
+            </div>
+
+            <div class="product-content">
+
+                <div class="product-title">
+                    <h3>Classic Grill</h3>
+                    <span>1450 Ft</span>
+                </div>
+
+                <p>
+                    Marhahús, cheddar, saláta,
+                    paradicsom és házi szósz.
+                </p>
+
+                <div class="product-bottom">
+
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        4.9
+                    </div>
+
+                    <a href="#product" class="add-button">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT -->
+
+        <article class="product-card">
+
+            <div class="product-image yellow">
+
+                <div class="product-burger double">
+                    <div class="pb-top"></div>
+                    <div class="pb-cheese"></div>
+                    <div class="pb-meat"></div>
+                    <div class="pb-cheese"></div>
+                    <div class="pb-meat"></div>
+                    <div class="pb-bottom"></div>
+                </div>
+
+            </div>
+
+            <div class="product-content">
+
+                <div class="product-title">
+                    <h3>Double Stack</h3>
+                    <span>1890 Ft</span>
+                </div>
+
+                <p>
+                    Két marhahús, dupla cheddar,
+                    karamellizált hagyma.
+                </p>
+
+                <div class="product-bottom">
+
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        4.8
+                    </div>
+
+                    <a href="#product" class="add-button">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT -->
+
+        <article class="product-card">
+
+            <div class="product-image green">
+
+                <div class="product-burger">
+                    <div class="pb-top"></div>
+                    <div class="pb-lettuce"></div>
+                    <div class="pb-cheese"></div>
+                    <div class="pb-meat"></div>
+                    <div class="pb-bottom"></div>
+                </div>
+
+            </div>
+
+            <div class="product-content">
+
+                <div class="product-title">
+                    <h3>Smoky BBQ</h3>
+                    <span>1690 Ft</span>
+                </div>
+
+                <p>
+                    Marhahús, cheddar, ropogós hagyma
+                    és füstös BBQ szósz.
+                </p>
+
+                <div class="product-bottom">
+
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        4.7
+                    </div>
+
+                    <a href="#product" class="add-button">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT -->
+
+        <article class="product-card">
+
+            <div class="product-image orange">
+
+                <div class="product-burger">
+                    <div class="pb-top"></div>
+                    <div class="pb-lettuce"></div>
+                    <div class="pb-cheese"></div>
+                    <div class="pb-meat"></div>
+                    <div class="pb-bottom"></div>
+                </div>
+
+            </div>
+
+            <div class="product-content">
+
+                <div class="product-title">
+                    <h3>Spicy Chicken</h3>
+                    <span>1590 Ft</span>
+                </div>
+
+                <p>
+                    Ropogós csirke, saláta,
+                    jalapeño és pikáns szósz.
+                </p>
+
+                <div class="product-bottom">
+
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        4.6
+                    </div>
+
+                    <a href="#product" class="add-button">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PRODUCT DETAIL ================= -->
+
+<section class="product-detail section" id="product">
+
+    <div class="detail-image">
+
+        <span class="detail-badge">NÉPSZERŰ</span>
+
+        <div class="big-burger">
+            <div class="big-top"></div>
+            <div class="big-lettuce"></div>
+            <div class="big-cheese"></div>
+            <div class="big-meat"></div>
+            <div class="big-cheese"></div>
+            <div class="big-meat"></div>
+            <div class="big-bottom"></div>
+        </div>
+
+    </div>
+
+    <div class="detail-content">
+
+        <span class="small-title">GRILLBOX SPECIAL</span>
+
+        <h2>Double Stack</h2>
+
+        <div class="detail-rating">
+            <i class="fa-solid fa-star"></i>
+            <strong>4.8</strong>
+            <span>128 értékelés</span>
+        </div>
+
+        <p class="detail-description">
+            Két szaftos marhahúspogácsa, olvadt cheddar,
+            friss saláta, karamellizált hagyma és
+            különleges GRILLBOX szósz friss buciban.
+        </p>
+
+        <div class="detail-price">
+            1 890 Ft
+        </div>
+
+        <div class="custom-option">
+
+            <h4>Válassz köretet</h4>
+
+            <label>
+                <input type="radio" name="side" checked>
+                <span>Sült burgonya</span>
+                <b>+0 Ft</b>
+            </label>
+
+            <label>
+                <input type="radio" name="side">
+                <span>Édesburgonya</span>
+                <b>+350 Ft</b>
+            </label>
+
+        </div>
+
+        <div class="quantity-row">
+
+            <div class="quantity">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+            </div>
+
+            <button class="btn btn-primary add-large">
+                Kosárba teszem
+                <i class="fa-solid fa-bag-shopping"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= COUPONS ================= -->
+
+<section class="coupons section" id="coupons">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">KEDVEZMÉNYEK</span>
+            <h2>Kuponjaid</h2>
+        </div>
+
+    </div>
+
+    <div class="coupon-grid">
+
+        <article class="coupon-card">
+
+            <div class="coupon-left">
+                <span>20% KEDVEZMÉNY</span>
+                <h3>GRILL20</h3>
+                <p>Minimum 4 000 Ft-os rendelésnél.</p>
+            </div>
+
+            <div class="coupon-right">
+                <i class="fa-solid fa-ticket"></i>
+                <span>20%</span>
+            </div>
+
+        </article>
+
+
+        <article class="coupon-card dark-coupon">
+
+            <div class="coupon-left">
+                <span>INGYENES KISZÁLLÍTÁS</span>
+                <h3>FREEBOX</h3>
+                <p>Online rendelésekhez használható.</p>
+            </div>
+
+            <div class="coupon-right">
+                <i class="fa-solid fa-truck"></i>
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CART ================= -->
+
+<section class="cart-section section" id="cart">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">RENDELÉSED</span>
+            <h2>Kosár</h2>
+        </div>
+
+    </div>
+
+    <div class="cart-layout">
+
+        <div class="cart-items">
+
+            <article class="cart-item">
+
+                <div class="cart-thumb">
+                    <div class="small-cart-burger"></div>
+                </div>
+
+                <div class="cart-info">
+                    <h3>Double Stack</h3>
+                    <p>Sült burgonyával</p>
+
+                    <div class="cart-quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                </div>
+
+                <strong>1 890 Ft</strong>
+
+            </article>
+
+
+            <article class="cart-item">
+
+                <div class="cart-thumb drink-thumb">
+                    <i class="fa-solid fa-glass-water"></i>
+                </div>
+
+                <div class="cart-info">
+                    <h3>Cola Zero</h3>
+                    <p>0,5 liter</p>
+
+                    <div class="cart-quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                </div>
+
+                <strong>590 Ft</strong>
+
+            </article>
+
+        </div>
+
+
+        <aside class="cart-summary">
+
+            <h3>Összesítés</h3>
+
+            <div class="summary-row">
+                <span>Termékek</span>
+                <strong>2 480 Ft</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Kiszállítás</span>
+                <strong>590 Ft</strong>
+            </div>
+
+            <div class="summary-row discount">
+                <span>Kedvezmény</span>
+                <strong>-0 Ft</strong>
+            </div>
+
+            <div class="summary-total">
+                <span>Összesen</span>
+                <strong>3 070 Ft</strong>
+            </div>
+
+            <button class="checkout-button">
+                Tovább a fizetéshez
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </aside>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PROFILE ================= -->
+
+<section class="profile section" id="profile">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="small-title">FIÓK</span>
+            <h2>Profil</h2>
+        </div>
+
+    </div>
+
+    <div class="profile-layout">
+
+        <div class="profile-card">
+
+            <div class="avatar">
+                G
+            </div>
+
+            <h3>Grillbox vásárló</h3>
+            <p>felhasznalo@email.hu</p>
+
+            <a href="#" class="profile-link">
+                <i class="fa-regular fa-user"></i>
+                Személyes adatok
+            </a>
+
+            <a href="#" class="profile-link">
+                <i class="fa-solid fa-location-dot"></i>
+                Szállítási címek
+            </a>
+
+            <a href="#" class="profile-link">
+                <i class="fa-solid fa-credit-card"></i>
+                Fizetési módok
+            </a>
+
+            <a href="#" class="profile-link">
+                <i class="fa-solid fa-right-left"></i>
+                Kijelentkezés
+            </a>
+
+        </div>
+
+
+        <div class="orders-card">
+
+            <div class="orders-header">
+                <h3>Legutóbbi rendelések</h3>
+                <span>3 rendelés</span>
+            </div>
+
+            <div class="order">
+
+                <div>
+                    <strong>#GB-1842</strong>
+                    <p>2026. szeptember 29.</p>
+                </div>
+
+                <div>
+                    <strong>4 280 Ft</strong>
+                    <span class="order-status">Teljesítve</span>
+                </div>
+
+            </div>
+
+
+            <div class="order">
+
+                <div>
+                    <strong>#GB-1798</strong>
+                    <p>2026. szeptember 22.</p>
+                </div>
+
+                <div>
+                    <strong>3 590 Ft</strong>
+                    <span class="order-status">Teljesítve</span>
+                </div>
+
+            </div>
+
+
+            <div class="order">
+
+                <div>
+                    <strong>#GB-1731</strong>
+                    <p>2026. szeptember 15.</p>
+                </div>
+
+                <div>
+                    <strong>5 190 Ft</strong>
+                    <span class="order-status">Teljesítve</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+
+            <a href="#home" class="logo footer-logo">
+                <span class="logo-mark">G</span>
+                <span>GRILL<span>BOX</span></span>
+            </a>
+
+            <p>
+                Friss grillélmény, egyszerű rendelés.
+            </p>
+
+            <div class="socials">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>GRILLBOX</h4>
+
+            <a href="#menu">Étlap</a>
+            <a href="#offers">Ajánlatok</a>
+            <a href="#coupons">Kuponok</a>
+            <a href="#profile">Profil</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>SEGÍTSÉG</h4>
+
+            <a href="#">Kapcsolat</a>
+            <a href="#">GYIK</a>
+            <a href="#">Szállítás</a>
+            <a href="#">Adatvédelem</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>NYITVATARTÁS</h4>
+
+            <p>Hétfő – Vasárnap</p>
+            <strong>10:00 – 23:00</strong>
+
+            <p class="footer-location">
+                <i class="fa-solid fa-location-dot"></i>
+                Budapest
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <span>© 2026 GRILLBOX</span>
+        <span>Minden jog fenntartva.</span>
+    </div>
+
+</footer>
 
 </body>
 </html>
